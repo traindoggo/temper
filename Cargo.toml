@@ -4,4 +4,4 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-expanduser = "1.2.2"
+home-dir = "0.1.0"
