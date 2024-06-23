@@ -3,8 +3,22 @@ use std::{
     env::current_dir,
     fs,
     io::{self, stdout, Write},
-    path::PathBuf,
+    path::{Path, PathBuf},
 };
+
+pub fn copy_recursively(source: impl AsRef<Path>, destination: impl AsRef<Path>) -> io::Result<()> {
+    fs::create_dir_all(&destination)?;
+    for entry in fs::read_dir(source)? {
+        let entry = entry?;
+        let filetype = entry.file_type()?;
+        if filetype.is_dir() {
+            copy_recursively(entry.path(), destination.as_ref().join(entry.file_name()))?;
+        } else {
+            fs::copy(entry.path(), destination.as_ref().join(entry.file_name()))?;
+        }
+    }
+    Ok(())
+}
 
 fn main() {
     // get all dirpaths under ~/.config/temper
@@ -65,17 +79,9 @@ fn main() {
     }
 
     // copy all target_path files to current dir
-    let current = current_dir().expect("can't get current dir");
     let target_path = &dirpaths[_idx];
-
-    for entry in fs::read_dir(target_path).expect("hoge") {
-        if let Ok(entry) = entry {
-            let path = entry.path();
-            let current_path = current.join(path.file_name().unwrap());
-            // TODO: error handling
-            let _ = fs::copy(path.display().to_string(), current_path);
-        }
-    }
+    let current = current_dir().expect("can't get current dir");
+    let _ = copy_recursively(target_path, current);
 
     println!(
         "\n>>> your choice is: {:?}",
