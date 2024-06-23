@@ -69,17 +69,15 @@ fn main() {
     for entry in fs::read_dir(target_path).expect("hoge") {
         if let Ok(entry) = entry {
             let path = entry.path();
-            println!(
-                "{:?} {:?}",
-                path.display().to_string(),
-                current.display().to_string()
-            );
-
             let current_path = current.join(path.file_name().unwrap());
-
-            let res = fs::copy(path.display().to_string(), current_path);
-
-            println!("{:?}", res);
+            // TODO: error handling
+            let _ = fs::copy(path.display().to_string(), current_path);
         }
     }
+
+    println!(
+        "\n>>> your choice is: {:?}",
+        dirpaths[_idx].file_name().unwrap()
+    );
+    println!(">>> success :^)");
 }
