@@ -30,6 +30,8 @@ fn main() {
         };
     }
 
+    dirpaths.sort();
+
     println!("------------------");
     for (index, dirpath) in dirpaths.iter().enumerate() {
         println!(">>> {}. {:?}", index, dirpath.file_name().unwrap());
