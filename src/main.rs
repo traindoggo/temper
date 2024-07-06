@@ -84,37 +84,34 @@ fn get_temper_dirpaths(dirpath: PathBuf) -> Vec<PathBuf> {
     dirpaths
 }
 
-/// get user input
-/// the user selects the template they want to create,
-/// and return the template index.
 fn get_userinput(size: usize) -> usize {
-    let mut idx: usize = 0;
-
     loop {
         print!("\ninput num (0 - {}): ", size - 1);
         stdout().flush().unwrap();
 
-        // conversion buffer to integer
-        let mut buffer = String::new();
-        let _ = io::stdin().read_line(&mut buffer);
+        let mut input = String::new();
 
-        match buffer.trim().to_string().parse::<usize>() {
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line");
+
+        let idx: usize = match input.trim().parse() {
             Ok(num) => {
                 if num < size {
-                    idx = num;
-                    break;
+                    num
                 } else {
-                    println!("huge number, again...")
+                    println!("* input num between ({}, {})", 0, size - 1);
+                    continue;
                 }
             }
             Err(_) => {
-                println!("wrong number, again...");
+                println!("* input num between ({}, {})", 0, size - 1);
                 continue;
             }
-        }
-    }
+        };
 
-    idx
+        return idx;
+    }
 }
 
 pub fn copy_recursively(source: impl AsRef<Path>, destination: impl AsRef<Path>) -> io::Result<()> {
