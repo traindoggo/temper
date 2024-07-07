@@ -1,5 +1,5 @@
 use std::env::current_dir;
-use tmper::{copy_recursively, find_or_create_dir, get_temper_dirpaths, get_userinput};
+use temper::{copy_recursively, find_or_create_dir, get_temper_dirpaths, get_userinput};
 
 fn main() {
     let dirpath = find_or_create_dir("~/.config/temper");
